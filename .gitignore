@@ -1,0 +1,42 @@
+# Fichiers de build générés
+*.obj
+*.exe
+*.dll
+*.pdb
+*.ilk
+*.res
+*.pch
+*.sdf
+*.ipch
+*.suo
+*.ncb
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.lib
+*.log
+*.idb
+*.pdb
+
+# Dossier bin et obj générés par Visual Studio
+[Bb]in/
+[Oo]bj/
+
+# Dossier contenant les paquets NuGet téléchargés
+packages/
+
+# Fichiers spécifiques à un IDE
+.vs*/
+*.sln.ide
+
+# Fichiers de sauvegarde
+*~
+*.swp
+
+# Fichiers d'analyse de code tiers
+.project
+
+# Dossier contenant les fichiers utilisateur (par exemple, les fichiers .suo, .user, .sln.ide, etc.)
+# Ajoutez ici tout fichier spécifique à votre IDE que vous ne souhaitez pas inclure dans le dépôt
