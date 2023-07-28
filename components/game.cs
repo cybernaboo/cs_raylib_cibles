@@ -14,7 +14,8 @@ namespace CowboyGame
         static int titleHeight = 35;
         static int targetWidth = 50;
         static int targetHeight = 50;
-        public bool running = true;
+        public bool running = false;
+        public bool firstGame = true;
         public int score = 0;
         Sound gunShotSound;
         Sound gameoverSound;

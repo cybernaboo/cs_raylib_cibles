@@ -48,8 +48,19 @@ namespace CowboyGame
                 UpdateMusicStream(game.music);
                 if (!game.running)
                 {
+                    if (!game.firstGame)
+                    {
+                        DrawTextEx(font, "GAME OVER", new Vector2(180.0f, 310.0f), 50, 2, YELLOW);
+                    }
+                    else
+                    {
+                        ClearBackground(WHITE);
+                        DrawTexture(textureTitle, 0, 0, WHITE);
+                        DrawTexture(textureWallPaper, 0, 0 + titleHeight, WHITE);
+                        DrawTextEx(font, "SCORE " + game.score, new Vector2(180.0f, 10.0f), 20, 2, BLACK);
+                        DrawTextEx(font, "5 targets and you're a dead man", new Vector2(15.0f, 310.0f), 30, 2, YELLOW);
+                    }
                     DrawTextEx(font, "PRESS ENTER TO START", new Vector2(80.0f, 150.0f), 25, 2, WHITE);
-                    DrawTextEx(font, "GAME OVER", new Vector2(180.0f, 310.0f), 50, 2, YELLOW);
                     if (IsKeyPressed(KeyboardKey.KEY_ENTER))
                     {
                         game.Reset();
@@ -72,7 +83,6 @@ namespace CowboyGame
                     DrawTexture(textureTitle, 0, 0, WHITE);
                     DrawTexture(textureWallPaper, 0, 0 + titleHeight, WHITE);
                     DrawTextEx(font, "SCORE " + game.score, new Vector2(180.0f, 10.0f), 20, 2, BLACK);
-                    // DrawRectangle(0, 30, screenWidth, 2, BLACK);
                     game.Draw(textureCible);
                 }
                 EndDrawing();
