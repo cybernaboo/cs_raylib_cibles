@@ -25,7 +25,7 @@ public class Game
         }
         image = LoadImage("./images/food.png");
         texture = LoadTextureFromImage(image);
-        UnloadImage(image);
+        // UnloadImage(image);
         CreateRandomTarget();
     }
     ~Game()
