@@ -2,56 +2,90 @@ using System.Numerics;
 using Raylib_CsLo;
 using static Raylib_CsLo.Raylib;
 
-
-public class Game
+namespace CowboyGame
 {
-    List<Vector2> targetList = new List<Vector2>();
 
-    static int gameWidth = 500;
-    static int gameHeight = 620;
-    static int targetWidth = 50;
-    static int targetHeight = 50;
-    private Texture texture;
-    private Image image;
-
-    public Game()
+    public class Game
     {
-        string currentDirectory = Directory.GetCurrentDirectory();
-        Console.WriteLine("Répertoire en cours : " + currentDirectory);
-        string filePath = "./images/food.png"; // Remplacez ceci par le chemin d'accès complet de votre fichier
-        if (File.Exists(filePath))
+        List<Vector2> targetList = new List<Vector2>();
+
+        static int gameWidth = 500;
+        static int gameHeight = 620;
+        static int titleHeight = 35;
+        static int targetWidth = 50;
+        static int targetHeight = 50;
+        public bool running = true;
+        public int score = 0;
+        Sound gunShotSound;
+        Sound gameoverSound;
+        public Game()
         {
-            Console.WriteLine("fichier trouvé");
+            InitAudioDevice();
+            gunShotSound = LoadSound("./sounds/gunshot.wav");
+            gameoverSound = LoadSound("./sounds/gameover.wav");
+            CreateRandomTarget();
         }
-        image = LoadImage("./images/food.png");
-        texture = LoadTextureFromImage(image);
-        // UnloadImage(image);
-        CreateRandomTarget();
-    }
-    ~Game()
-    {
-        UnloadTexture(texture);
-    }
-    void CreateRandomTarget()
-    {
-        Vector2 newTarget = new Vector2(GetRandomValue(0, gameWidth - targetWidth), GetRandomValue(0, gameHeight - targetHeight));
-        targetList.Add(newTarget);
-    }
-
-    public void Print()
-    {
-        foreach (Vector2 target in targetList)
+        ~Game()
         {
-            Console.WriteLine($"Target : {target}");
+            UnloadSound(gunShotSound);
+            UnloadSound(gameoverSound);
+            CloseAudioDevice();
         }
-    }
-    public void Draw()
-    {
-        foreach (Vector2 target in targetList)
+        void CreateRandomTarget()
         {
-            Color darkGreen = new Color(43, 51, 24, 255);
-            // DrawTexture(texture, (int)target.X, (int)target.Y, darkGreen);
-            DrawTexture(texture, 650, 650, darkGreen);
+            Vector2 newTarget = new Vector2(GetRandomValue(0, gameWidth - targetWidth), GetRandomValue(titleHeight, gameHeight - targetHeight));
+            targetList.Add(newTarget);
+        }
+
+        public void Print()
+        {
+            foreach (Vector2 target in targetList)
+            {
+                Console.WriteLine($"Target : {target}");
+            }
+        }
+        public void Draw(Texture texture)
+        {
+            foreach (Vector2 target in targetList)
+            {
+                DrawTexture(texture, (int)target.X, (int)target.Y, WHITE);
+                // }
+            }
+        }
+        public void Update()
+        {
+            if (targetList.Count < 5)
+                CreateRandomTarget();
+            else
+            {
+                GameOver();
+            }
+        }
+        public void GameOver()
+        {
+            running = false;
+            PlaySound(gameoverSound);
+        }
+
+        public void Reset()
+        {
+            running = true;
+            targetList.Clear();
+            score = 0;
+        }
+
+        public void CheckTarget(int x, int y)
+        {
+            foreach (Vector2 target in targetList)
+            {
+                if (x >= target.X && x <= target.X + targetWidth && y >= target.Y && y <= target.Y + targetHeight)
+                {
+                    targetList.Remove(target);
+                    score += 10;
+                    PlaySound(gunShotSound);
+                    break;
+                }
+            }
         }
     }
 }
