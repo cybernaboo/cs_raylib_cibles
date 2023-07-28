@@ -9,8 +9,8 @@ namespace CowboyGame
     {
         List<Vector2> targetList = new List<Vector2>();
 
-        static int gameWidth = 500;
-        static int gameHeight = 620;
+        // static int gameWidth = 500;
+        // static int gameHeight = 368;
         static int titleHeight = 35;
         static int targetWidth = 50;
         static int targetHeight = 50;
@@ -18,22 +18,27 @@ namespace CowboyGame
         public int score = 0;
         Sound gunShotSound;
         Sound gameoverSound;
+        public Music music;
+
         public Game()
         {
             InitAudioDevice();
+            music = LoadMusicStream("Sounds/westernmusic.mp3");
+            PlayMusicStream(music);
             gunShotSound = LoadSound("./sounds/gunshot.wav");
             gameoverSound = LoadSound("./sounds/gameover.wav");
             CreateRandomTarget();
         }
         ~Game()
         {
+            UnloadMusicStream(music);
             UnloadSound(gunShotSound);
             UnloadSound(gameoverSound);
             CloseAudioDevice();
         }
         void CreateRandomTarget()
         {
-            Vector2 newTarget = new Vector2(GetRandomValue(0, gameWidth - targetWidth), GetRandomValue(titleHeight, gameHeight - targetHeight));
+            Vector2 newTarget = new Vector2(GetRandomValue(0, Program.screenWidth - targetWidth), GetRandomValue(titleHeight, Program.screenHeight - targetHeight));
             targetList.Add(newTarget);
         }
 
@@ -48,7 +53,7 @@ namespace CowboyGame
         {
             foreach (Vector2 target in targetList)
             {
-                DrawTexture(texture, (int)target.X, (int)target.Y, WHITE);
+                DrawTexture(texture, (int)target.X, (int)target.Y, Program.transparent);
                 // }
             }
         }
