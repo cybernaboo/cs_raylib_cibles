@@ -7,10 +7,11 @@ namespace CowboyGame
     public class Program
     {
         public const int screenWidth = 500;
-        public const int screenHeight = 366;
-        static readonly int titleHeight = 32;
+        public const int screenHeight = 365;
+        static readonly int titleHeight = 35;
         static Image imageCible = LoadImage("images/cible2.png");
         static Image imageWallPaper = LoadImage("images/westernwallpaper.png");
+        static Image imageTitle = LoadImage("images/woodboard.png");
         private static double lastUpdateTime = 0;
         public static Color transparent = new(255, 255, 255, 128);
 
@@ -33,8 +34,12 @@ namespace CowboyGame
             UnloadImage(imageCible);
             Texture textureWallPaper = LoadTextureFromImage(imageWallPaper);
             UnloadImage(imageWallPaper);
+            Texture textureTitle = LoadTextureFromImage(imageTitle);
+            UnloadImage(imageTitle);
 
-            Font font = GetFontDefault();
+            // Font font = GetFontDefault();
+            Font font = LoadFont("fonts/Western.ttf");
+
             Game game = new();
             game.Print();
 
@@ -43,8 +48,9 @@ namespace CowboyGame
                 UpdateMusicStream(game.music);
                 if (!game.running)
                 {
-                    DrawTextEx(font, "Game Over", new Vector2(250.0f, 310.0f), 50, 2, YELLOW);
-                    if (IsKeyPressed(KeyboardKey.KEY_ENTER) && game.running == false)
+                    DrawTextEx(font, "PRESS ENTER TO START", new Vector2(80.0f, 150.0f), 25, 2, WHITE);
+                    DrawTextEx(font, "GAME OVER", new Vector2(180.0f, 310.0f), 50, 2, YELLOW);
+                    if (IsKeyPressed(KeyboardKey.KEY_ENTER))
                     {
                         game.Reset();
                     }
@@ -63,14 +69,17 @@ namespace CowboyGame
                         game.Update();
                     }
                     ClearBackground(WHITE);
+                    DrawTexture(textureTitle, 0, 0, WHITE);
                     DrawTexture(textureWallPaper, 0, 0 + titleHeight, WHITE);
-                    DrawTextEx(font, "Score " + game.score, new Vector2(5.0f, 5.0f), 25, 2, BLACK);
-                    DrawRectangle(0, 30, screenWidth, 2, BLACK);
+                    DrawTextEx(font, "SCORE " + game.score, new Vector2(180.0f, 10.0f), 20, 2, BLACK);
+                    // DrawRectangle(0, 30, screenWidth, 2, BLACK);
                     game.Draw(textureCible);
                 }
                 EndDrawing();
             }
+            UnloadTexture(textureWallPaper);
             UnloadTexture(textureCible);
+            UnloadTexture(textureTitle);
             UnloadFont(font);
             CloseWindow();
         }
