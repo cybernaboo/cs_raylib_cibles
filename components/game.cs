@@ -1,6 +1,9 @@
 using System.Numerics;
 using Raylib_CsLo;
 using static Raylib_CsLo.Raylib;
+using System.IO;
+using System.Text.Json;
+
 
 namespace CowboyGame
 {
@@ -21,6 +24,7 @@ namespace CowboyGame
         Sound gameoverSound;
         public Music music;
 
+        public static int gameHighScore = ReadHighScore("data/highscore.json");
         public Game()
         {
             InitAudioDevice();
@@ -71,12 +75,15 @@ namespace CowboyGame
         {
             running = false;
             PlaySound(gameoverSound);
+            UpdateHighScore("data/highscore.json", score);
         }
 
         public void Reset()
         {
             running = true;
             targetList.Clear();
+            // gameHighScore = ReadHighScore("data/highscore.json");
+            Program.intervalTime = 1;
             score = 0;
         }
 
@@ -91,6 +98,37 @@ namespace CowboyGame
                     PlaySound(gunShotSound);
                     break;
                 }
+            }
+        }
+
+        public static int ReadHighScore(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                string jsonData = File.ReadAllText(filePath);
+                HighScore? highScore = new HighScore();
+                highScore = JsonSerializer.Deserialize<HighScore>(jsonData);
+                if (highScore is not null)
+                    return highScore.highScoreValue;
+                else
+                    return 0;
+            }
+            else
+            {
+                return 0; // Return 0 if the file doesn't exist or cannot be read
+            }
+        }
+        public static void UpdateHighScore(string filePath, int newScore)
+        {
+            // int currentHighScore = ReadHighScore(filePath);
+
+            // if (newScore > currentHighScore)
+            if (newScore > gameHighScore)
+            {
+                HighScore highScore = new HighScore { highScoreValue = newScore };
+                string jsonData = JsonSerializer.Serialize(highScore);
+                File.WriteAllText(filePath, jsonData);
+                gameHighScore = newScore;
             }
         }
     }
